@@ -1,3 +1,7 @@
+With the same network traffic analysis as Snort...
+
+------------------------- Storage COVERT CHANNEL -----------------
+
 Using the TTL more than once is possible in Suricata:
 
 alert ip any any -> any any (msg:"IP Time To Live Field Contain Unfamiliar Data... May Be Contain Covert Channel!"; ttl:65; ttl:66; ttl:67; ip_proto:6; classtype:misc-activity; sid:2101321;)
@@ -22,3 +26,14 @@ Using the TOS more than once is possible in Suricata:
 alert ip any any -> any any (msg:"Type of Service Field Contain Unfamiliar Data... May Be Contain Covert Channel!"; tos:!0; tos:!1; tos:!2; tos:!4; tos:!8; ip_proto:6; classtype:misc-activity; sid:2101322;)
 
 While it is not possible in the Snort system to use the word TOS more than once in each rule
+
+
+
+------------------------- TIMING COVERT CHANNEL -----------------
+
+The following rule is defined:
+alert ip any any -> any any (msg:"Short IP Packet Detected"; dsize:<21; classtype:misc-activity; sid:10001010;)
+
+The experiment was repeated under the same conditions, and the alert was issued:
+02/13/2022-06:35:25.505567  [**] [1:10001010:0] Short IP Packet Detected [**] [Classification: Misc activity] [Priority: 3] {TCP} 192.168.18.178:80 -> 192.168.18.173:5000
+
