@@ -1,0 +1,42 @@
+php code execution 
+php information disclusure
+php easter egg
+
+
+The following link contains links to the proposed attack:
+https://web4us.wordpress.com/2009/10/27/php-easter-egg/
+
+By experimenting with the previous urls, we observe the network traffic flow:
+
+18:16:01.946644 IP 192.168.18.129.33774 > 192.168.18.173.80: Flags [P.], seq 1:437, ack 1, win 29200, options [nop,nop,TS val 18497082 ecr 7545585], length 436: HTTP: GET /btslab/vulnerability/phpinjection/challenge1.php?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000 HTTP/1.1
+
+
+We define the following rule:
+alert tcp any any -> any any (msg:"PHP Information-Disclosure - PHP Credits"; content:"PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000"; sid:1000035; rev:1;)
+
+We will get the following alert:
+01/26-18:16:01.946648 [**] [1:1000035:1] "PHP Information-Disclosure - PHP Credits" [**] [Priority: 0] {TCP} 192.168.18.129:33774 -> 192.168.18.173:80
+
+
+And so on for the rest of the urls...
+
+We define the following rules:
+alert tcp any any -> any any (msg:"PHP Information-Disclosure - Easter Egg"; content:"PHPE9568F36-D428-11d2-A769-00AA001ACF42"; sid:1000032; rev:1;)
+
+alert tcp any any -> any any (msg:"PHP Information-Disclosure - PHP Logo"; content:"PHPE9568F34-D428-11d2-A769-00AA001ACF42"; sid:1000033; rev:1;)
+
+alert tcp any any -> any any (msg:"PHP Information-Disclosure - Zend Logo"; content:"PHPE9568F35-D428-11d2-A769-00AA001ACF42"; sid:1000034; rev:1;)
+
+alert tcp any any -> any any (msg:"PHP Information-Disclosure - PHP Credits"; content:"PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000"; sid:1000035; rev:1;)
+
+
+When applying the attack (by dealing with btslab):
+http://localhost/btslab/vulnerability/phpinjection/challenge1.php?data=${phpinfo()}
+
+Which causes the browser to give the PHP data with some attached images, the IDS triggers the following alerts:
+
+01/26-18:20:57.598122 [**] [1:1000035:1] "PHP Information-Disclosure - PHP Credits" [**] [Priority: 0] {TCP} 192.168.18.173:80 -> 192.168.18.129:33776
+01/26-18:20:57.598122 [**] [1:1000034:1] "PHP Information-Disclosure - Zend Logo" [**] [Priority: 0] {TCP} 192.168.18.173:80 -> 192.168.18.129:33776
+01/26-18:20:57.598122 [**] [1:1000033:1] "PHP Information-Disclosure - PHP Logo" [**] [Priority: 0] {TCP} 192.168.18.173:80 -> 192.168.18.129:33776
+
+
