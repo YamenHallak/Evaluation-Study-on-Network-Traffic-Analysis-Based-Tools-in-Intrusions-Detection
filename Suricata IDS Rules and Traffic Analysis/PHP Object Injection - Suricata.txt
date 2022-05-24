@@ -1,0 +1,8 @@
+نفس تحليل المرور الشبكي عند Snort
+
+نعرف القاعدة التالية:
+alert tcp any any -> any any (msg:"PHP Object Injection Possible Attack!"; pcre:"/.+=[a-z]+\:[0-9]+\:\{([a-zA-Z0-9]+\:[0-9]+(\:%22[a-zA-Z0-9]+%22)?\;)+\}/"; sid:1000036; rev:1;)
+
+وعند إعادة الهجوم يطلق التنبيه التالي:
+
+04/04/2022-09:52:21.085776  [**] [1:100001:0] PHP Object Injection Possible Attack! [**] [Classification: Misc activity] [Priority: 3] {TCP} 192.168.18.129:44652 -> 192.168.18.173:80

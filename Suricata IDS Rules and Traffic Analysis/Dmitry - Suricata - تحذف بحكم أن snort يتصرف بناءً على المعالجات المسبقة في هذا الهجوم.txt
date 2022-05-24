@@ -1,0 +1,73 @@
+عند تحليل المررو الشبكي نلاحظ الطرود التالية والتي تقوم بمسح المنافذ:
+
+
+من 192.168.18.129 إلى 192.168.18.173، SYN
+40	12.034379	192.168.18.129	192.168.18.173	TCP	74	47870 → 1 [SYN] Seq=0 Win=29200 Len=0 MSS=1460 SACK_PERM=1 TSval=299403 TSecr=0 WS=128
+Transmission Control Protocol, Src Port: 47870, Dst Port: 1, Seq: 0, Len: 0
+
+
+من 192.168.18.173 إلى 192.168.18.129، RST, ACK
+43	12.035420	192.168.18.173	192.168.18.129	TCP	54	1 → 47870 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+Transmission Control Protocol, Src Port: 1, Dst Port: 47870, Seq: 1, Ack: 1, Len: 0
+
+
+وبعدها العديد من الطرود المشابهة والتي الغرض منها مسح المنافذ
+
+---------------------------------------------------------------------------------------------------------------------
+هام: إن مايهم بالدرجة الأولى هو كشف عمليات مسح المنافذ بغض النظر هل كان المنفذ مفتوح أم لا.
+لذلك سيتم التركيز على عمليات مسح المنافذ من خلال أول طردين فقط (SYN, RST-ACK)
+---------------------------------------------------------------------------------------------------------------------
+
+وبالنسبة للمنفذ المفتوح يقوم الضحية بالرد كالتالي:
+من 192.168.18.173 إلى 192.168.18.129، SYN,ACK
+83	12.056184	192.168.18.173	192.168.18.129	TCP	74	21 → 57446 [SYN, ACK] Seq=0 Ack=1 Win=8192 Len=0 MSS=1460 WS=256 SACK_PERM=1 TSval=133455 TSecr=299408
+Transmission Control Protocol, Src Port: 21, Dst Port: 57446, Seq: 0, Ack: 1, Len: 0
+
+ومن:
+ 192.168.18.129 إلى 192.168.18.173، ACK
+84	12.056660	192.168.18.129	192.168.18.173	TCP	66	57446 → 21 [ACK] Seq=1 Ack=1 Win=29312 Len=0 TSval=299408 TSecr=133455
+Transmission Control Protocol, Src Port: 57446, Dst Port: 21, Seq: 1, Ack: 1, Len: 0
+
+ومن:
+ 192.168.18.129 إلى 192.168.18.173، FIN, ACK
+85	12.057200	192.168.18.129	192.168.18.173	TCP	66	57446 → 21 [FIN, ACK] Seq=1 Ack=1 Win=29312 Len=0 TSval=299408 TSecr=133455
+Transmission Control Protocol, Src Port: 57446, Dst Port: 21, Seq: 1, Ack: 1, Len: 0
+
+ثم:
+من 192.168.18.173 إلى 192.168.18.129، ACK
+87	12.057599	192.168.18.173	192.168.18.129	TCP	66	21 → 57446 [ACK] Seq=1 Ack=2 Win=66560 Len=0 TSval=133456 TSecr=299408
+Transmission Control Protocol, Src Port: 21, Dst Port: 57446, Seq: 1, Ack: 2, Len: 0
+
+ثم (لم يوجد ببقية المنافذ المفتوحة)
+ 192.168.18.129 إلى 192.168.18.173، RST
+93	12.059645	192.168.18.129	192.168.18.173	TCP	60	57446 → 21 [RST] Seq=2 Win=0 Len=0
+Transmission Control Protocol, Src Port: 57446, Dst Port: 21, Seq: 2, Len: 0
+
+وبآلية مشابهة من أجل باقي المنافذ...
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------
+نضيف القواعد التالية:
+
+alert tcp any any -> any any (msg:"Port Scan Attempt 1 .... Maybe Dmitry Tool is Running!"; flags:S; tcp.window:29200; classtype:misc-activity; sid:100000;)
+
+alert tcp any any -> any any (msg:"Port Scan Attempt 2.... Maybe Dmitry Tool is Running!"; flags:RA; tcp.window:0; classtype:misc-activity; sid:100001;)
+
+نجرب الهجوم ونلاحظ العديد من الطرود التالية ضمن حركة المرور الشبكي:
+
+35	12.286622	192.168.18.129	192.168.18.173	TCP	74	55618 → 1 [SYN] Seq=0 Win=29200 Len=0 MSS=1460 SACK_PERM=1 TSval=3008949 TSecr=0 WS=128
+
+38	12.288869	192.168.18.173	192.168.18.129	TCP	54	1 → 55618 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+......................
+39	12.289720	192.168.18.129	192.168.18.173	TCP	74	48416 → 2 [SYN] Seq=0 Win=29200 Len=0 MSS=1460 SACK_PERM=1 TSval=3008950 TSecr=0 WS=128
+..................................
+
+فيصدر النظام التنبيهات التالية بحسب عدد الطرود السابقة:
+
+04/04/2022-06:29:23.088035  [**] [1:100000:0] Port Scan Attempt 1 .... Maybe Dmitry Tool is Running! [**] [Classification: Misc activity] [Priority: 3] {TCP} 192.168.18.129:55618 -> 192.168.18.173:1
+04/04/2022-06:29:23.089324  [**] [1:100001:0] Port Scan Attempt 2.... Maybe Dmitry Tool is Running! [**] [Classification: Misc activity] [Priority: 3] {TCP} 192.168.18.173:1 -> 192.168.18.129:55618

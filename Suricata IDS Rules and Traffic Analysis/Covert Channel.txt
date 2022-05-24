@@ -1,0 +1,26 @@
+إن استخدام ال ttl أكثر من مرة هو أمر ممكن في نظام Suricata:
+alert ip any any -> any any (msg:"IP Time To Live Field Contain Unfamiliar Data... May Be Contain Covert Channel!"; ttl:65; ttl:66; ttl:67; ip_proto:6; classtype:misc-activity; sid:2101321;)
+
+بينما نظام Suricata لم يقبل النفي للحقل ttl، وأصدر خطأ عند القاعدة التالية:
+alert ip any any -> any any (msg:"IP Time To Live Field Contain Unfamiliar Data... May Be Contain Covert Channel!"; ttl:!65; ip_proto:6; classtype:misc-activity; sid:21013232;)
+
+بينما غير ممكن في نظام Snort استخدام كلمة ttl أكثر من مرة واحدة في كل قاعدة
+
+يمكن تعريف القاعدة بسبيل النفي في نظام Snort كالتالي:
+alert ip any any -> any any (msg:"IP Time To Live Field Contain Unfamiliar Data... May Be Contain Covert Channel!"; ttl:!64; ip_proto:6;  sid:2101321;)
+
+لكن هنا نحقق الاستفادة فقط في حال كان المرور الشبكي له ttl=64 بشكل دائم
+
+كذلك بالنسبة لل TOS:
+alert ip any any -> any any (msg:"Type of Service Field Contain Unfamiliar Data... May Be Contain Covert Channel!"; tos:!0; ip_proto:6; sid:2101322;)
+
+لايقبل أكثر من مرة، وبالتالي لانستطيع الاستفادة منها إلا إذا كان حقل ال TOS في كل المرور الشبكي هو قيمة موحدة
+
+إن استخدام ال TOS أكثر من مرة هو أمر ممكن في نظام Suricata:
+alert ip any any -> any any (msg:"Type of Service Field Contain Unfamiliar Data... May Be Contain Covert Channel!"; tos:!0; tos:!1; tos:!2; tos:!4; tos:!8; ip_proto:6; classtype:misc-activity; sid:2101322;)
+
+بينما غير ممكن في نظام Snort استخدام كلمة TOS أكثر من مرة واحدة في كل قاعدة
+
+هام: في هذه الحالة يكون نظام Suricata أكثر مرونة وشمولية في تعريف قواعد كشف القنوات المخفية من نظام snort
+
+هام جداً: هل مكاملة كلا النظامين يفي بالغرض لكشف القنوات المخفيّة؟ أي الاستفادة من إيجابيات كل منهما في تعريف القواعد؟
