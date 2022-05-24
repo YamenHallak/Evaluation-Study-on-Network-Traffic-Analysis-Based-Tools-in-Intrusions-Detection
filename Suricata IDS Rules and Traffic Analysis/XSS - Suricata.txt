@@ -1,9 +1,10 @@
-نفس تحليل المرور الخاص ب snort
+Same traffic analysis as snort
 
-نقوم بتعريف ذات القاعدة:
+We define the same rule:
+
 alert tcp any any -> any any (msg:"Cross Site Scripting (XSS) Attack - URL Modify"; pcre:"/clr=[%][0-9a-fA-F]{5}[&]Change=Change/s"; classtype:misc-activity; sid:100006; rev:1;)
 
-ونطبق ذات الهجوم لنحصل على التنبيه التالي:
+We apply the same attack to get the following alert:
 
 04/04/2022-09:32:15.060127  [**] [1:100000:0] Cross Site Scripting (XSS) Attack - URL Modify [**] [Classification: Misc activity] [Priority: 3] {TCP} 192.168.18.129:44646 -> 192.168.18.173:80
 
