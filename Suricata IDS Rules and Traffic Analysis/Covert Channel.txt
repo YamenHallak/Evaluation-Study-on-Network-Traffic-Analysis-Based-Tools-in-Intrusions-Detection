@@ -1,26 +1,24 @@
-إن استخدام ال ttl أكثر من مرة هو أمر ممكن في نظام Suricata:
+Using the TTL more than once is possible in Suricata:
+
 alert ip any any -> any any (msg:"IP Time To Live Field Contain Unfamiliar Data... May Be Contain Covert Channel!"; ttl:65; ttl:66; ttl:67; ip_proto:6; classtype:misc-activity; sid:2101321;)
 
-بينما نظام Suricata لم يقبل النفي للحقل ttl، وأصدر خطأ عند القاعدة التالية:
+While the Suricata system did not accept the negation of the TTL field, it generated an error at the following rule:
 alert ip any any -> any any (msg:"IP Time To Live Field Contain Unfamiliar Data... May Be Contain Covert Channel!"; ttl:!65; ip_proto:6; classtype:misc-activity; sid:21013232;)
 
-بينما غير ممكن في نظام Snort استخدام كلمة ttl أكثر من مرة واحدة في كل قاعدة
+While in Snort it is not possible to use the TTL word more than once per rule
 
-يمكن تعريف القاعدة بسبيل النفي في نظام Snort كالتالي:
+The rule of negation can be defined in the Snort system as:
 alert ip any any -> any any (msg:"IP Time To Live Field Contain Unfamiliar Data... May Be Contain Covert Channel!"; ttl:!64; ip_proto:6;  sid:2101321;)
 
-لكن هنا نحقق الاستفادة فقط في حال كان المرور الشبكي له ttl=64 بشكل دائم
+But here we get the benefit only if the network traffic is permanently ttl=64
 
-كذلك بالنسبة لل TOS:
+Likewise for TOS:
 alert ip any any -> any any (msg:"Type of Service Field Contain Unfamiliar Data... May Be Contain Covert Channel!"; tos:!0; ip_proto:6; sid:2101322;)
 
-لايقبل أكثر من مرة، وبالتالي لانستطيع الاستفادة منها إلا إذا كان حقل ال TOS في كل المرور الشبكي هو قيمة موحدة
+It is not accepted more than once, and therefore we cannot benefit from it unless the TOS field in all network traffic is a uniform value
 
-إن استخدام ال TOS أكثر من مرة هو أمر ممكن في نظام Suricata:
+Using the TOS more than once is possible in Suricata:
+
 alert ip any any -> any any (msg:"Type of Service Field Contain Unfamiliar Data... May Be Contain Covert Channel!"; tos:!0; tos:!1; tos:!2; tos:!4; tos:!8; ip_proto:6; classtype:misc-activity; sid:2101322;)
 
-بينما غير ممكن في نظام Snort استخدام كلمة TOS أكثر من مرة واحدة في كل قاعدة
-
-هام: في هذه الحالة يكون نظام Suricata أكثر مرونة وشمولية في تعريف قواعد كشف القنوات المخفية من نظام snort
-
-هام جداً: هل مكاملة كلا النظامين يفي بالغرض لكشف القنوات المخفيّة؟ أي الاستفادة من إيجابيات كل منهما في تعريف القواعد؟
+While it is not possible in the Snort system to use the word TOS more than once in each rule
