@@ -1,1 +1,34 @@
+1- A victim to try attacks on, and through it we apply the covert channels attack:
+Windows 7 Ultimate 32 bit
+Single Core CPU 2.3 GHz
+256 MB RAM
+IP Address: 192.168.18.173/24
+
+
+2- Attacker (with metasploit installed):
+Kali Linux 2016 64 bit
+Single Core CPU 2.3 GHz
+1 GB RAM
+IP Address: 192.168.18.129/24
+
+
+3- Another peripheral attacker:
+Ubuntu 14.04 32 bit
+Single Core CPU 2.3 GHz
+256 MB RAM
+IP Address: 192.168.18.162/24
+
+
+4- Snort Intrusions Detection System:
+Ubuntu 20.04 64 bit
+Dual Core CPU 2.3 GHz
+1 GB RAM
+IP Address: 192.168.18.171/24
+
+
+5- Suricata Intrusions Detection System:
+Ubuntu 20.04 64 bit
+Dual Core 2.3 CPU GHz
+1 GB RAM
+IP Address: 192.168.18.178/24
 
