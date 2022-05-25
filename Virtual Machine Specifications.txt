@@ -24,6 +24,7 @@ Ubuntu 20.04 64 bit
 Dual Core CPU 2.3 GHz
 1 GB RAM
 IP Address: 192.168.18.171/24
+NIC: 100Mbps
 
 
 5- Suricata Intrusions Detection System:
@@ -31,4 +32,4 @@ Ubuntu 20.04 64 bit
 Dual Core 2.3 CPU GHz
 1 GB RAM
 IP Address: 192.168.18.178/24
-
+NIC: 100Mbps
