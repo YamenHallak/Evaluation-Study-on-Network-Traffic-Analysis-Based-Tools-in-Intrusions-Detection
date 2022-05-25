@@ -90,89 +90,89 @@ int main()
     packet[10] = 0xE5;
     packet[11] = 0xB6;
     
-	  //IP Header
-	  //Common Status
-	  packet[12] = 0x08;
-	  packet[13] = 0x00;
+    //IP Header
+    //Common Status
+    packet[12] = 0x08;
+    packet[13] = 0x00;
 	
-  	////////////////////////// IP //////////////////////
-  	packet[14]= 0x45; // Version & Header Length 
+    ////////////////////////// IP //////////////////////
+    packet[14]= 0x45; // Version & Header Length 
 
-	  //Common Status // Maybe Contain Covert Channel 
-	  packet[15]= 0x04; // TOS			
+    //Common Status // Maybe Contain Covert Channel 
+    packet[15]= 0x04; // TOS			
 
-	  //Note: Filled Out According To Your Studied Condition
-	  packet[16]= 0x00; // Total Length: 40 byte
-	  packet[17]= 0x28; // Total Length: 40 byte
+    //Note: Filled Out According To Your Studied Condition
+    packet[16]= 0x00; // Total Length: 40 byte
+    packet[17]= 0x28; // Total Length: 40 byte
 	
-	  //Note: Filled Out According To Your Studied Condition // Maybe Contain Covert Channel 
-	  packet[18]= 0x00; // ID
-	  packet[19]= 0x00; // ID	
+    //Note: Filled Out According To Your Studied Condition // Maybe Contain Covert Channel 
+    packet[18]= 0x00; // ID
+    packet[19]= 0x00; // ID	
 
     // Maybe Contain Covert Channel 
-	  packet[20]= 0x40; // Flags + Fragment Offset
-	  packet[21]= 0x00; // Flags + Fragment Offset
+    packet[20]= 0x40; // Flags + Fragment Offset
+    packet[21]= 0x00; // Flags + Fragment Offset
 
-	  packet[22]= 0x80; // TTL	// Maybe Contain Covert Channel 
+    packet[22]= 0x80; // TTL	// Maybe Contain Covert Channel 
 
-	  packet[23]= 0x06; // Protocol: TCP
-
-	  //Checksum Must Be Caluclated in a Right Way to Avoid Dropping the Packet by IDS or Alerting by Network Traffic Analyzers
-	  //Note: Filled Out According To Your Studied Condition // Maybe Contain Covert Channel
-	  packet[24]= 0x54; // Check Sum
-	  packet[25]= 0x23; // Check Sum
-	
-	  //Note: Filled Out According To Your Studied Condition
-	  packet[26]= 0xC0; // SRC IP: 192
-	  packet[27]= 0xA8; // SRC IP: 168
-	  packet[28]= 0x12; // SRC IP: 18	
-	  packet[29]= 0xAD; // SRC IP: 173
-
-	  //Note: Filled Out According To Your Studied Condition
-	  packet[30]= 0xC0; // DST IP: 192
-	  packet[31]= 0xA8; // DST IP: 168
-	  packet[32]= 0x12; // DST IP: 18
-	  packet[33]= 0xAB; // DST IP: 171
-	
-	  ////////////////////////// TCP //////////////////////
-	  //Note: Filled Out According To Your Studied Condition
-	  packet[34]= 0x13; // SRC Port: 5000
-	  packet[35]= 0x88; // SRC Port: 5000
-  
-  	//Note: Filled Out According To Your Studied Condition
-  	packet[36]= 0x00; // DST Port: 80
-  	packet[37]= 0x50; // DST Port: 80
-
-	  //Note: Filled Out According To Your Studied Condition // Maybe Contain Covert Channel
-	  packet[38]= 0x00; //Sequence //A
-	  packet[39]= 0x00; //Sequence //B
-	  packet[40]= 0x00; //Sequence //C
-	  packet[41]= 0x00; //Sequence //D
-
-	  //Note: Filled Out According To Your Studied Condition // Maybe Contain Covert Channel
-	  packet[42]= 0x00; //Ack    //A
-	  packet[43]= 0x00; //Ack		 //B
-	  packet[44]= 0x00; //Ack		 //C
-	  packet[45]= 0x00; //Ack		 //D
-
-	  packet[46]= 0x50; // Header Length -or- Data offset = 5 // 4 bit
-	  packet[47]= 0x10; // Reserved 6 bits // ARG, ACK, PSG, RST, SYN, FIN 6 bit
-	  //0101 000000 010000
-
-	  packet[48]= 0xFa; // Window //64240
-	  packet[49]= 0xF0; // Window
-	  //You Can Make It FFFF
+    packet[23]= 0x06; // Protocol: TCP
 
     //Checksum Must Be Caluclated in a Right Way to Avoid Dropping the Packet by IDS or Alerting by Network Traffic Analyzers
-	  packet[50]= 0xFA; // Checksum
-	  packet[51]= 0x62; // Checksum
+    //Note: Filled Out According To Your Studied Condition // Maybe Contain Covert Channel
+    packet[24]= 0x54; // Check Sum
+    packet[25]= 0x23; // Check Sum
 	
-	  //Note: Filled Out According To Your Studied Condition // Maybe Contain Covert Channel
-  	packet[52]= 0x00; //Urgent Pointers
-  	packet[53]= 0x00; //Urgent Pointers		
+    //Note: Filled Out According To Your Studied Condition
+    packet[26]= 0xC0; // SRC IP: 192
+    packet[27]= 0xA8; // SRC IP: 168
+    packet[28]= 0x12; // SRC IP: 18	
+    packet[29]= 0xAD; // SRC IP: 173
+
+    //Note: Filled Out According To Your Studied Condition
+    packet[30]= 0xC0; // DST IP: 192
+    packet[31]= 0xA8; // DST IP: 168
+    packet[32]= 0x12; // DST IP: 18
+    packet[33]= 0xAB; // DST IP: 171
 	
-	  //Comment / Uncomment == No Flood / Flood
-	  //while(true) 
+    ////////////////////////// TCP //////////////////////
+    //Note: Filled Out According To Your Studied Condition
+    packet[34]= 0x13; // SRC Port: 5000
+    packet[35]= 0x88; // SRC Port: 5000
+  
+    //Note: Filled Out According To Your Studied Condition
+    packet[36]= 0x00; // DST Port: 80
+    packet[37]= 0x50; // DST Port: 80
+
+    //Note: Filled Out According To Your Studied Condition // Maybe Contain Covert Channel
+    packet[38]= 0x00; //Sequence //A
+    packet[39]= 0x00; //Sequence //B
+    packet[40]= 0x00; //Sequence //C
+    packet[41]= 0x00; //Sequence //D
+
+    //Note: Filled Out According To Your Studied Condition // Maybe Contain Covert Channel
+    packet[42]= 0x00; //Ack    //A
+    packet[43]= 0x00; //Ack		 //B
+    packet[44]= 0x00; //Ack		 //C
+    packet[45]= 0x00; //Ack		 //D
+
+    packet[46]= 0x50; // Header Length -or- Data offset = 5 // 4 bit
+    packet[47]= 0x10; // Reserved 6 bits // ARG, ACK, PSG, RST, SYN, FIN 6 bit
+    //0101 000000 010000
+
+    packet[48]= 0xFa; // Window //64240
+    packet[49]= 0xF0; // Window
+    //You Can Make It FFFF
+
+    //Checksum Must Be Caluclated in a Right Way to Avoid Dropping the Packet by IDS or Alerting by Network Traffic Analyzers
+    packet[50]= 0xFA; // Checksum
+    packet[51]= 0x62; // Checksum
+	
+    //Note: Filled Out According To Your Studied Condition // Maybe Contain Covert Channel
+    packet[52]= 0x00; //Urgent Pointers
+    packet[53]= 0x00; //Urgent Pointers		
+	
+    //Comment / Uncomment == No Flood / Flood
+    //while(true) 
 
 
 
