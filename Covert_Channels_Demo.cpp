@@ -53,13 +53,13 @@ int main()
 	for(d=alldevs, i=0; i< inum-1 ;d=d->next, i++);
 	
 	/* Open the adapter */
-	if ( (adhandle= pcap_open(d->name,	        // name of the device
+	if ( (adhandle= pcap_open(d->name,	    				        // name of the device
 							 65536,	                      	// portion of the packet to capture. 
-								    	                      	// 65536 grants that the whole packet will be captured on all the MACs.
-							 PCAP_OPENFLAG_PROMISCUOUS,			// promiscuous mode
-							 1000,		                      // read timeout
+								    	                // 65536 grants that the whole packet will be captured on all the MACs.
+							 PCAP_OPENFLAG_PROMISCUOUS,	// promiscuous mode
+							 1000,		                // read timeout
 							 NULL,	                       	// remote authentication
-							 errbuf		                      // error buffer
+							 errbuf		                // error buffer
 							 ) ) == NULL)
 	{
 		fprintf(stderr,"\nUnable to open the adapter. %s is not supported by WinPcap\n");
@@ -150,10 +150,10 @@ int main()
     packet[41]= 0x00; //Sequence //D
 
     //Note: Filled Out According To Your Studied Condition // Maybe Contain Covert Channel
-    packet[42]= 0x00; //Ack    //A
-    packet[43]= 0x00; //Ack		 //B
-    packet[44]= 0x00; //Ack		 //C
-    packet[45]= 0x00; //Ack		 //D
+    packet[42]= 0x00; //Ack //A
+    packet[43]= 0x00; //Ack //B
+    packet[44]= 0x00; //Ack //C
+    packet[45]= 0x00; //Ack //D
 
     packet[46]= 0x50; // Header Length -or- Data offset = 5 // 4 bit
     packet[47]= 0x10; // Reserved 6 bits // ARG, ACK, PSG, RST, SYN, FIN 6 bit
