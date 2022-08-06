@@ -31,7 +31,7 @@ ACK
 
 304	0.905505	192.168.18.173	192.168.18.129	TCP	66	80 → 42230 [ACK] Seq=1 Ack=177 Win=65160 Len=0 TSval=11470166 TSecr=28330825
 
-حفظ الترجمة
+
 From 129 to 173
 to port 80
 Note the flags:
