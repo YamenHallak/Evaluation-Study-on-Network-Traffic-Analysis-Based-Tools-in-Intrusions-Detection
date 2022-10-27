@@ -1,0 +1,108 @@
+-------------Commands-------------
+
+First Machine:
+
+ptunnel
+
+Second Machine:
+
+ptunnel -p 192.168.18.129 -lp 8080 -da localhost -dp 22
+
+ssh localhost -p 8080
+
+-------------Traffic Analysis-------------
+
+Here it asks for the password, and while entering it we notice the network traffic (packets were selected from several separate experiments to observe the stability of the payload values):
+
+566	151.706807	192.168.18.162	192.168.18.129	ICMP	70	Echo (ping) request  id=0x8be5, seq=64/16384, ttl=64 (reply in 567)
+
+0000   00 0c 29 bb 1d 85 00 50 56 28 0d e9 08 00 45 00
+0010   00 38 2e 70 40 00 40 01 65 e1 c0 a8 12 a2 c0 a8
+0020   12 81 08 00 42 bd 8b e5 00 40 d5 20 08 80 7f 00
+0030   00 01 00 00 00 16 40 00 00 01 00 00 00 3e 00 00
+0040   00 00 00 40 8b e5
+
+
+371	94.556729	192.168.18.129	192.168.18.162	ICMP	70	Echo (ping) reply    id=0x7ac3, seq=103/26368, ttl=64 (request in 370)
+
+0000   00 50 56 28 0d e9 00 0c 29 bb 1d 85 08 00 45 00
+0010   00 38 18 ac 00 00 40 01 bb a5 c0 a8 12 81 c0 a8
+0020   12 a2 00 00 6c 8c 7a c3 00 67 d5 20 08 80 7f 00
+0030   00 01 00 00 00 16 40 00 00 01 00 00 00 65 00 00
+0040   00 00 00 67 7a c3
+
+
+
+108	24.152408	192.168.18.129	192.168.18.162	ICMP	70	Echo (ping) reply    id=0x76c3, seq=31/7936, ttl=64
+
+0000   00 50 56 28 0d e9 00 0c 29 bb 1d 85 08 00 45 00
+0010   00 38 4f b9 40 00 40 01 44 98 c0 a8 12 81 c0 a8
+0020   12 a2 00 00 35 61 76 c3 00 1f d5 20 08 80 7f 00
+0030   00 01 00 00 00 16 80 00 00 01 00 00 00 20 00 00
+0040   00 00 00 1f 76 c3
+
+
+
+And the following packets that contain explicit text characters:
+
+382	23.549340	192.168.18.162	192.168.18.129	ICMP	114	Echo (ping) request  id=0x1d5c, seq=1/256, ttl=64 (reply in 383)
+
+0000   00 0c 29 bb 1d 85 00 50 56 28 0d e9 08 00 45 00   ..)....PV(....E.
+0010   00 64 0b 67 40 00 40 01 88 be c0 a8 12 a2 c0 a8   .d.g@.@.........
+0020   12 81 08 00 45 f2 1d 5c 00 01 d5 20 08 80 00 00   ....E..\... ....
+0030   00 00 00 00 00 00 40 00 00 02 00 00 ff ff 00 00   ......@.........
+0040   00 2c 00 01 1d 5c 53 53 48 2d 32 2e 30 2d 4f 70   .,...\SSH-2.0-Op
+0050   65 6e 53 53 48 5f 36 2e 36 2e 31 70 31 20 55 62   enSSH_6.6.1p1 Ub
+0060   75 6e 74 75 2d 32 75 62 75 6e 74 75 32 2e 31 33   untu-2ubuntu2.13
+0070   0d 0a                                             ..
+
+
+
+
+383	23.549465	192.168.18.129	192.168.18.162	ICMP	114	Echo (ping) reply    id=0x1d5c, seq=1/256, ttl=64 (request in 382)
+
+0000   00 50 56 28 0d e9 00 0c 29 bb 1d 85 08 00 45 00   .PV(....).....E.
+0010   00 64 ec 63 00 00 40 01 e7 c1 c0 a8 12 81 c0 a8   .d.c..@.........
+0020   12 a2 00 00 4d f2 1d 5c 00 01 d5 20 08 80 00 00   ....M..\... ....
+0030   00 00 00 00 00 00 40 00 00 02 00 00 ff ff 00 00   ......@.........
+0040   00 2c 00 01 1d 5c 53 53 48 2d 32 2e 30 2d 4f 70   .,...\SSH-2.0-Op
+0050   65 6e 53 53 48 5f 36 2e 36 2e 31 70 31 20 55 62   enSSH_6.6.1p1 Ub
+0060   75 6e 74 75 2d 32 75 62 75 6e 74 75 32 2e 31 33   untu-2ubuntu2.13
+0070   0d 0a                                             ..
+
+
+
+
+The types of ICMP can be known through:
+
+https://www.ibm.com/docs/en/qsip/7.3.3?topic=applications-icmp-type-code-ids
+where the type was request , repley i.e. 0 and 8
+While the code was only 0 throughout the network traffic analysis
+
+
+
+After adding the following rules for Snort:
+
+alert icmp any any -> any any (msg:"OpenSSH in ICMP Request Payload - Possible Covert Channel Attack!"; itype:8; icode:0; content:"OpenSSH"; sid:2101345;)
+
+alert icmp any any -> any any (msg:"OpenSSH in ICMP Reply Payload - Possible Covert Channel Attack!"; itype:0; icode:0; content:"OpenSSH"; sid:2101350;)
+
+alert icmp any any -> any any (msg:"PTunnel (ICMP Request) - Possible Covert Channel Attack!"; itype:8; icode:0; content:"|d5 20 08 80|"; sid:2101360;)
+
+alert icmp any any -> any any (msg:"PTunnel (ICMP Reply) - Possible Covert Channel Attack!"; itype:0; icode:0; content:"|d5 20 08 80|"; sid:2101370;)
+
+
+
+
+After the re-attack, we get the following alerts:
+
+09/07-10:43:32.124998 [**] [1:2101345:0] "OpenSSH in ICMP Request Payload - Possible Covert Channel Attack!" [**] [Priority: 0] {ICMP} 192.168.18.162 -> 192.168.18.129
+
+09/07-10:43:32.125175 [**] [1:2101350:0] "OpenSSH in ICMP Reply Payload - Possible Covert Channel Attack!" [**] [Priority: 0] {ICMP} 192.168.18.129 -> 192.168.18.162
+
+09/07-10:43:32.124959 [**] [1:2101360:0] "PTunnel (ICMP Request) - Possible Covert Channel Attack!" [**] [Priority: 0] {ICMP} 192.168.18.162 -> 192.168.18.129
+
+09/07-10:43:32.125175 [**] [1:2101370:0] "PTunnel (ICMP Reply) - Possible Covert Channel Attack!" [**] [Priority: 0] {ICMP} 192.168.18.129 -> 192.168.18.162
+
+
+
